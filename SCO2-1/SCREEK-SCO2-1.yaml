@@ -1,0 +1,121 @@
+# This is a custom firmware for CO2 Sensor SCO2-1
+# https://docs.screek.io/sco2-1
+esphome:
+  name: screek-co2-sensor-1
+  comment: Screek CO2 Sensor SCO2-1
+  friendly_name: CO2 Sensor SCO2-1
+  name_add_mac_suffix: True
+  platformio_options:
+    board_build.flash_mode: dio
+  project: 
+    name: Screek.CO2_Sensor
+    version: SCO2-1
+
+esp32:
+  board: lolin_c3_mini
+  framework:
+    type: arduino
+    version: 2.0.7
+    platform_version: 6.0.1
+
+external_components:
+  - source:
+      type: git
+      url: https://github.com/screekworkshop/custom_components_support_for_screek_2a
+      ref: main
+    components: [esp32, uart]
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  # encryption:
+    # key: "your-api-password"
+
+ota:
+  password: "your-ota-password"
+
+web_server:
+  port: 80
+
+wifi:
+  power_save_mode: HIGH
+  ap:
+    ssid: "CO2-SENSOR-SCO2-1"
+
+captive_portal:
+
+improv_serial:
+  
+
+i2c:
+  sda: GPIO4
+  scl: GPIO5
+  scan: true
+  id: bus_a
+
+binary_sensor:
+  - platform: status
+    name: Online
+    id: ink_ha_connected
+
+sensor:
+  - platform: template
+    id: sys_esp_temperature
+    name: ESP Temperature
+    lambda: return temperatureRead();
+    unit_of_measurement: °C
+    device_class: TEMPERATURE
+    update_interval: 30s
+    entity_category: "diagnostic"
+  - platform: uptime
+    name: Uptime
+    id: sys_uptime
+    update_interval: 60s
+  - platform: wifi_signal 
+    name: RSSI
+    id: wifi_signal_db
+    update_interval: 60s
+    entity_category: "diagnostic"
+  - platform: template
+    id: esp_memory
+    icon: mdi:memory
+    name: ESP Free Memory
+    lambda: return heap_caps_get_free_size(MALLOC_CAP_INTERNAL) / 1024;
+    unit_of_measurement: 'kB'
+    state_class: measurement
+    entity_category: "diagnostic"
+    disabled_by_default: True
+    update_interval: 60s
+  - platform: scd4x
+    co2:
+      name: "SHD40 CO2"
+    temperature:
+      name: "SHD40 Temperature(Ref)"
+      entity_category: "diagnostic"
+    humidity:
+      name: "SHD40 Humidity(Ref)"
+      entity_category: "diagnostic"
+    update_interval: 10s
+
+light:
+  - platform: status_led
+    name: sys_status
+    pin: GPIO12
+    internal: True
+    restore_mode: ALWAYS_OFF
+  - platform: status_led
+    name: sys_status
+    pin: GPIO13
+    internal: True
+    restore_mode: ALWAYS_OFF
+
+button:
+  - platform: restart
+    icon: mdi:power-cycle
+    name: "ESP Reboot"
+  - platform: factory_reset
+    disabled_by_default: True
+    name: Factory Reset
+    id: factory_reset_all
