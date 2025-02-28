@@ -23,7 +23,7 @@ external_components:
       type: git
       url: https://github.com/screekworkshop/custom_components_support_for_screek_2a
       ref: main
-    components: [esp32, uart]
+    components: [uart]
 
 # Enable logging
 logger:
@@ -34,7 +34,8 @@ api:
     # key: "your-api-password"
 
 ota:
-  password: "your-ota-password"
+  - platform: esphome
+    password: "YOUR_OTA_PASSWORD"
 
 web_server:
   port: 80
@@ -102,12 +103,16 @@ sensor:
 light:
   - platform: status_led
     name: sys_status
-    pin: GPIO12
+    pin: 
+      number: GPIO12
+      ignore_pin_validation_error: true
     internal: True
     restore_mode: ALWAYS_OFF
   - platform: status_led
     name: sys_status
-    pin: GPIO13
+    pin: 
+      number: GPIO13
+      ignore_pin_validation_error: true
     internal: True
     restore_mode: ALWAYS_OFF
 
