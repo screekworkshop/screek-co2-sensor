@@ -90,7 +90,7 @@ sensor:
     disabled_by_default: True
     update_interval: 60s
   - platform: scd4x
-    automatic_self_calibration: true # set to false if you do not want automatic calibration
+    automatic_self_calibration: false # set to false if you do not want automatic calibration
     co2:
       name: "SCD40 CO2"
     temperature:
