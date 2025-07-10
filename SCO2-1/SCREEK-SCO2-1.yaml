@@ -90,13 +90,14 @@ sensor:
     disabled_by_default: True
     update_interval: 60s
   - platform: scd4x
+    automatic_self_calibration: true # set to false if you do not want automatic calibration
     co2:
-      name: "SHD40 CO2"
+      name: "SCD40 CO2"
     temperature:
-      name: "SHD40 Temperature(Ref)"
+      name: "SCD40 Temperature(Ref)"
       entity_category: "diagnostic"
     humidity:
-      name: "SHD40 Humidity(Ref)"
+      name: "SCD40 Humidity(Ref)"
       entity_category: "diagnostic"
     update_interval: 10s
 
